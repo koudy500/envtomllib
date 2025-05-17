@@ -1,7 +1,7 @@
 # envTOMLlib
-`envTOMLlib` is fork of dead project envtoml by mrshu/envtoml. But because his project is too old and was not updated at all I decided to rewrite it to newer python version, where tomllib has been in-build.
-So here it is an `envTOMLlib`, where instead of using old toml it is now using python's in-build tomllib.
-This library was created on my personal need to use toml configuration format in container-like environments, where environment variables used for project configuration.
+`envTOMLlib` is fork of dead project envtoml by mrshu/envtoml. But because his project is too old and was not updated at all in last couple of years I decided to rewrite it to newer python version, where tomllib has been in-build.
+So here it is an `envTOMLlib`.
+This library was created on my personal need to use toml configuration format in container-like environments, where environment variables are often used for project configurations.
 
 ## Usage 
 1. Usage is same as using in-build tomllib library but instead of importing tomllib (ex.`import tomllib` see details on: [python tomllib docs](https://docs.python.org/3/library/tomllib.html)) you just import envtomllib like this:
