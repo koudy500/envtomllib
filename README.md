@@ -12,13 +12,11 @@ Supported environment variable value types and conversion examples:
  - integers (ex. `'10'`=>`10`, `'20'`=>`20`, `'274'`=>`274`, `'10000006565654644'`=>`10000006565654644`)
  - floats (ex. `'3.14'`=>`3.14`, `'10.2'`=>`10.2`, `'10265.1651'`=>`10265.1651`)
  - booleans (ex. `true`=>`True`, `false`=>`False`)
- - inline tables (see: [inline tables toml](https://toml.io/en/v1.0.0#inline-table)) (ex. `'{ a = 10}'`=>`{'a':10}`)
-  - `<ENVIRONMENT VARIABLE>='{ <inline table variable> = <value> }'` 
+ - inline tables (see: [inline tables toml](https://toml.io/en/v1.0.0#inline-table)) (ex. `'{ a = 10}'`=>`{'a':10}`) 
+   - `<ENVIRONMENT VARIABLE>='{ <inline table variable> = <value> }'` 
 
 ### Example:
 Lets suppose you have ex.toml file in the same folder where you will have python example script:
-```
-```
 ```
 [table]
 table_parameter = ${INLINE_TABLE_EXAMPLE}
