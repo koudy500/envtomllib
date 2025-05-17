@@ -18,7 +18,7 @@ MORE_COMPLEX_OUTPUT = {
 
 
 def test_version():
-    assert __version__ == '0.2.0'
+    assert __version__ == '0.0.1'
 
 
 def test_simple_load():
