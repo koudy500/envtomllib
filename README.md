@@ -14,6 +14,7 @@ Supported environment variable value types and conversion examples:
  - booleans (ex. `true`=>`True`, `false`=>`False`)
  - inline tables (see: [inline tables toml](https://toml.io/en/v1.0.0#inline-table)) (ex. `'{ a = 10}'`=>`{'a':10}`) 
    - `<ENVIRONMENT VARIABLE>='{ <inline table variable> = <value> }'` 
+ - supports lists (ex. `'[1, 2, 3, foo, true, false]'`=>`[1, 2, 3, 'foo', True, False]`)
 
 ### Example:
 Lets suppose you have ex.toml file in the same folder where you will have python example script:

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "envTOMLlib"
-version = "0.0.1"
+version = "0.1.0"
 description = "originally it was a fork of dead envtoml by mrshu/envtoml but it has been completely rewritten and it is now using in-build tomllib. "
 authors = ["mr.Shu <mr@shu.io>", "koudy <paseka.logadm@gmail.com>"]
 license = "MIT"
