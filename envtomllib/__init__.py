@@ -1,11 +1,14 @@
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 
 import tomllib
 import os
 import re
+import warnings
+
 
 RE_ENV_VAR = r'^\$\{([a-zA-Z_][a-zA-Z0-9_]+)\}$'
 RE_INLINE_TABLE_PATTERN = r'^\{(.+)\}$'
+RE_LIST_PATTERN = r'^\[(.+)\]$'
 
 
 class EnvVarDoesNotExist(Exception):
@@ -14,33 +17,36 @@ class EnvVarDoesNotExist(Exception):
 
 def env_replace(x):
     env_var = x.group(1)
-    print("env_var", env_var)
     try:
         return os.environ[env_var]
-    except KeyError as error:
-        print(error)
-        raise EnvVarDoesNotExist(f'Enviromnet variable {
-                                 env_var} does not exist.')
+    except KeyError:
+        raise EnvVarDoesNotExist(f'Environmental variable {
+                                 env_var} does no exist.')
+
+
+def replace_list_pattern(x):
+    return x.group(1)
 
 
 def convert_inline_table_toml_str(value: str):
-    helper_str = f"tmp = {value}"
-    print("conversion inline table", helper_str)
-    test = tomllib.loads(helper_str)['tmp']
-    print(test)
-    return test
+    helper_str = f'tmp = {value}'
+    return tomllib.loads(helper_str)['tmp']
 
 
-def type_env_value(value: str):
-    print("typed env value:", value)
+def convert_list_str(value: str):
+    list_content = re.sub(RE_LIST_PATTERN, r'\1', value)
+    list_content = re.sub(r'\s+', '', list_content)
+    return [type_value(list_value) for list_value in list_content.split(',')]
 
+
+def type_value(value: str):
     try:
-        return float(value)
+        return int(value)
     except ValueError:
         pass
 
     try:
-        return int(value)
+        return float(value)
     except ValueError:
         pass
 
@@ -50,8 +56,10 @@ def type_env_value(value: str):
     if value.lower() == "false":
         return False
 
+    if re.match(RE_LIST_PATTERN, value):
+        return convert_list_str(value)
+
     if re.match(RE_INLINE_TABLE_PATTERN, value):
-        print("much inline table pattern", value)
         try:
             return convert_inline_table_toml_str(value)
         except tomllib.TOMLDecodeError:
@@ -61,12 +69,15 @@ def type_env_value(value: str):
 
 
 def process_value(val: str):
-    print("processing value:", val)
-    if re.match(RE_ENV_VAR, val):
-        r = re.sub(RE_ENV_VAR, env_replace, val)
-        return type_env_value(r)
-    else:
+    if not re.match(RE_ENV_VAR, val):
         return val
+
+    try:
+        r = re.sub(RE_ENV_VAR, env_replace, val)
+        return type_value(r)
+    except EnvVarDoesNotExist as e:
+        warnings.warn(f'WARNING: {e}')
+        return None
 
 
 def process(item):

@@ -1,6 +1,6 @@
 import pytest
 from envtomllib import __version__
-from envtomllib import load, loads, EnvVarDoesNotExist
+from envtomllib import load, loads
 import os
 
 
@@ -18,7 +18,7 @@ MORE_COMPLEX_OUTPUT = {
 
 
 def test_version():
-    assert __version__ == '0.0.1'
+    assert __version__ == '0.1.0'
 
 
 def test_simple_load():
@@ -95,8 +95,10 @@ def test_loads_with_replace_and_empty_value():
 x = 5
 y = '${NON_EXISTENT_VAR}'
 """
-    with pytest.raises(EnvVarDoesNotExist):
-        loads(toml_str)
+    with pytest.warns(UserWarning,
+                      match=r'WARNING: Environmental variable NON_EXISTENT_VAR'
+                      ' does no exist.'):
+        assert loads(toml_str) == {'x': 5, 'y': None}
 
 
 def test_loads_with_replace_dict():
@@ -106,3 +108,21 @@ x = 5
 y = '${MY_CONFIG_VAR}'
 """
     assert loads(toml_str) == {'x': 5, 'y': {'z': 123}}
+
+
+TEST_ELEMENTALS_TOML_STR = """
+y = '${MY_CONFIG_VAR}'
+"""
+
+
+def test_loads_with_replace_list():
+    os.environ['MY_CONFIG_VAR'] = '[1, 2, 3, foo, False, True]'
+    assert loads(TEST_ELEMENTALS_TOML_STR) == {
+        'y': [1, 2, 3, 'foo', False, True]}
+
+
+def test_loads_with_replace_int():
+    os.environ['MY_CONFIG_VAR'] = '54321'
+    result = loads(TEST_ELEMENTALS_TOML_STR)
+    assert result == {'y': 54321}
+    assert isinstance(result['y'], int)
