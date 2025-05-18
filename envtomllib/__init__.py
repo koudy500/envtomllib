@@ -17,11 +17,9 @@ class EnvVarDoesNotExist(Exception):
 
 def env_replace(x):
     env_var = x.group(1)
-    print('env_var', env_var)
     try:
         return os.environ[env_var]
-    except KeyError as error:
-        print(error)
+    except KeyError:
         raise EnvVarDoesNotExist(f'Environmental variable {
                                  env_var} does no exist.')
 
@@ -71,7 +69,6 @@ def type_value(value: str):
 
 
 def process_value(val: str):
-    print("processing value:", val)
     if not re.match(RE_ENV_VAR, val):
         return val
 
