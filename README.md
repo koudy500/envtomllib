@@ -51,7 +51,12 @@ you should get output:
 
 
 ## Tests
-### with docker/podman:
- 1. `<docker/podman> build . -t envtomllib`
- 2. `<docker/podman> run envtomllib`
+### With podman:
+ 1. `podman build . -t envtomllib`
+ 2. `podman run envtomllib`
+
+### With docker:
+ 1. `cp Containerfile Dockerfile`
+ 2. `docker build . -t envtomllib`
+ 3. `docker run envtomllib`
 
